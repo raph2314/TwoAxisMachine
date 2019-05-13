@@ -35,6 +35,7 @@
 #include "stm32f4xx_it.h"
 #include "xnucleoihm02a1_interface.h"
 #include "example_usart.h"
+#include "xnucleoihm02a1.h"
 
 /**
   * @addtogroup MicrosteppingMotor_Example
@@ -76,7 +77,11 @@ void SysTick_Handler(void)
 */
 void EXTI1_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
+		BSP_L6470_FlagEventManager();
+  }
 }
 
 /**
@@ -84,7 +89,11 @@ void EXTI1_IRQHandler(void)
 */
 void EXTI0_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_0) != RESET)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);
+    BSP_L6470_BusySynchEventManager();
+  }
 }
 
 /**
@@ -101,7 +110,11 @@ void USART2_IRQHandler(void)
 */
 void EXTI15_10_IRQHandler(void)
 {
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_13);
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_13) != RESET)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
+    BSP_EmergencyStop();
+  }
 }
 
 /**
