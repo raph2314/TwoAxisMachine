@@ -104,6 +104,9 @@ GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT};
 
 const uint16_t GPIO_PIN[LEDn] = {LED2_PIN};
 
+GPIO_TypeDef* SWITCH_PORT[SWITCHn] = {SWITCH1_GPIO_PORT};
+const uint16_t SWITCH_PIN[SWITCHn] = {SWITCH1_PIN};
+
 GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {KEY_BUTTON_GPIO_PORT}; 
 const uint16_t BUTTON_PIN[BUTTONn] = {KEY_BUTTON_PIN}; 
 const uint8_t BUTTON_IRQn[BUTTONn] = {KEY_BUTTON_EXTI_IRQn};
@@ -190,6 +193,29 @@ void BSP_LED_Init(Led_TypeDef Led)
   HAL_GPIO_Init(GPIO_PORT[Led], &GPIO_InitStruct);
   
   HAL_GPIO_WritePin(GPIO_PORT[Led], GPIO_PIN[Led], GPIO_PIN_RESET); 
+}
+
+/**
+  * @brief  Configures SWITCH GPIO.
+  * @param  Switch: Specifies the Switch to be configured. 
+  *   This parameter can be one of following parameters:
+  *     @arg SWITCH
+  * @retval None
+  */
+void BSP_SWITCH_Init(Switch_TypeDef Switch)
+{
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  /* Configure the GPIO_SWITCH pin */
+  GPIO_InitStruct.Pin = GPIO_PIN[Switch];
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+  HAL_GPIO_Init(SWITCH_PORT[Switch], &GRPIO_InitStruct);
+
+  HAL_GPIO_WritePin(SWITCH_PORT[Switch], SWITCH_PIN[Switch], GPIO_PIN_RESET);  
+
 }
 
 /**

@@ -75,6 +75,7 @@
 #endif
 
 #define NUCLEO_USE_USER_LED     //!< Uncomment to enable the NUCLEO User LED feature.
+#define NUCLEO_USE_USER_SWITCH  //!< Uncomment to enable the NUCLEO User Switch feature.
 #define NUCLEO_USE_USER_BUTTON  //!< Uncomment to enable the NUCLEO User Button feature.
 #define NUCLEO_USE_USART        //!< Uncomment to enable the NUCLEO USART feature.
 

@@ -71,6 +71,11 @@ typedef enum
 }Led_TypeDef;
 
 typedef enum 
+{
+  SWITCH = 0;
+}Switch_TypeDef;
+
+typedef enum 
 {  
   BUTTON_USER = 0,
   /* Alias */
@@ -126,6 +131,24 @@ typedef enum
   * @}
   */ 
   
+/** @addtogroup STM32F4XX_NUCLEO_LOW_LEVEL_SWITCH
+  * @{
+  */
+#define SWITCHn                                    1
+
+#define SWITCH1_PIN                                GPIO_PIN_8
+#define SWITCH1_GPIO_PORT                          GPIOB
+// #define LED2_GPIO_CLK_ENABLE()                  __GPIOA_CLK_ENABLE()
+// #define LED2_GPIO_CLK_DISABLE()                 __GPIOA_CLK_DISABLE()  
+
+#define SWITCH_GPIO_CLK_ENABLE(__INDEX__)     do{if((__INDEX__) == 0) SWITCH_GPIO_CLK_ENABLE(); \
+                                              }while(0)
+#define SWITCH_GPIO_CLK_DISABLE(__INDEX__)    do{if((__INDEX__) == 0) SWITCH_GPIO_CLK_DISABLE(); \
+                                              }while(0)
+/**
+  * @}
+  */
+
 /** @addtogroup STM32F4XX_NUCLEO_LOW_LEVEL_BUTTON
   * @{
   */  
@@ -257,6 +280,7 @@ void             BSP_LED_Init(Led_TypeDef Led);
 void             BSP_LED_On(Led_TypeDef Led);
 void             BSP_LED_Off(Led_TypeDef Led);
 void             BSP_LED_Toggle(Led_TypeDef Led);
+void             BSP_SWITCH_Init(Switch_TypeDef Switch);
 void             BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode);
 uint32_t         BSP_PB_GetState(Button_TypeDef Button);
 uint8_t          BSP_JOY_Init(void);
