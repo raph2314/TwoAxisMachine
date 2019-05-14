@@ -207,7 +207,7 @@ void BSP_SWITCH_Init(Switch_TypeDef Switch)
   GPIO_InitTypeDef GPIO_InitStruct;
 
   /* Configure the GPIO_SWITCH pin */
-  GPIO_InitStruct.Pin = GPIO_PIN[Switch];
+  GPIO_InitStruct.Pin = SWITCH_PIN[Switch];
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
@@ -215,7 +215,6 @@ void BSP_SWITCH_Init(Switch_TypeDef Switch)
   HAL_GPIO_Init(SWITCH_PORT[Switch], &GRPIO_InitStruct);
 
   HAL_GPIO_WritePin(SWITCH_PORT[Switch], SWITCH_PIN[Switch], GPIO_PIN_RESET);  
-
 }
 
 /**

@@ -154,7 +154,7 @@ void MX_GPIO_Init(void)
 
 #ifdef NUCLEO_USE_USER_SWITCH
   /* Configures Switch GPIO */
-  BSP_SWITCH_INIT(SWITCH);
+  BSP_SWITCH_Init(SWITCH);
 #endif
 }
 
