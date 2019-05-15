@@ -150,11 +150,12 @@ void MX_GPIO_Init(void)
 #ifdef NUCLEO_USE_USER_LED
   /* Configures LED GPIO */
   BSP_LED_Init(LED2);
+  BSP_LED_Init(LED_GREEN);
 #endif
 
 #ifdef NUCLEO_USE_USER_SWITCH
   /* Configures Switch GPIO */
-  BSP_SWITCH_Init(SWITCH);
+  BSP_SWITCH_Init(SWITCH0);
 #endif
 }
 

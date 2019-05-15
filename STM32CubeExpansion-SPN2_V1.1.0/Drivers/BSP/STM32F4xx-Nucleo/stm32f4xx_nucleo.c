@@ -100,9 +100,9 @@
 /** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_Private_Variables
   * @{
   */ 
-GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT};
+GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT, LED_GREEN_GPIO_PORT};
 
-const uint16_t GPIO_PIN[LEDn] = {LED2_PIN};
+const uint16_t GPIO_PIN[LEDn] = {LED2_PIN, LED_GREEN_GPIO_PORT};
 
 GPIO_TypeDef* SWITCH_PORT[SWITCHn] = {SWITCH1_GPIO_PORT};
 const uint16_t SWITCH_PIN[SWITCHn] = {SWITCH1_PIN};
@@ -196,28 +196,6 @@ void BSP_LED_Init(Led_TypeDef Led)
 }
 
 /**
-  * @brief  Configures SWITCH GPIO.
-  * @param  Switch: Specifies the Switch to be configured. 
-  *   This parameter can be one of following parameters:
-  *     @arg SWITCH
-  * @retval None
-  */
-void BSP_SWITCH_Init(Switch_TypeDef Switch)
-{
-  GPIO_InitTypeDef GPIO_InitStruct;
-
-  /* Configure the GPIO_SWITCH pin */
-  GPIO_InitStruct.Pin = SWITCH_PIN[Switch];
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-
-  HAL_GPIO_Init(SWITCH_PORT[Switch], &GPIO_InitStruct);
-
-  HAL_GPIO_WritePin(SWITCH_PORT[Switch], SWITCH_PIN[Switch], GPIO_PIN_RESET);  
-}
-
-/**
   * @brief  Turns selected LED On.
   * @param  Led: Specifies the Led to be set on. 
   *   This parameter can be one of following parameters:
@@ -246,11 +224,34 @@ void BSP_LED_Off(Led_TypeDef Led)
   * @param  Led: Specifies the Led to be toggled. 
   *   This parameter can be one of following parameters:
   *     @arg LED2  
+  *     @arg LEG_GREEN
   * @retval None
   */
 void BSP_LED_Toggle(Led_TypeDef Led)
 {
   HAL_GPIO_TogglePin(GPIO_PORT[Led], GPIO_PIN[Led]);
+}
+
+/**
+  * @brief  Configures SWITCH GPIO.
+  * @param  Switch: Specifies the Switch to be configured. 
+  *   This parameter can be one of following parameters:
+  *     @arg SWITCH
+  * @retval None
+  */
+void BSP_SWITCH_Init(Switch_TypeDef Switch)
+{
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  /* Configure the GPIO_SWITCH pin */
+  GPIO_InitStruct.Pin = SWITCH_PIN[Switch];
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+  HAL_GPIO_Init(SWITCH_PORT[Switch], &GPIO_InitStruct);
+
+  HAL_GPIO_WritePin(SWITCH_PORT[Switch], SWITCH_PIN[Switch], GPIO_PIN_RESET);  
 }
 
 /**
