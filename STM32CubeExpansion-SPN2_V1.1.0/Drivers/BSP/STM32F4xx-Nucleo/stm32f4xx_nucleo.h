@@ -72,7 +72,7 @@ typedef enum
 
 typedef enum 
 {
-  SWITCH = 0;
+  SWITCH = 0
 }Switch_TypeDef;
 
 typedef enum 
