@@ -141,9 +141,7 @@ typedef enum
 #define SWITCHn                                    1
 
 #define SWITCH1_PIN                                GPIO_PIN_8
-#define SWITCH1_GPIO_PORT                          GPIOB
-// #define LED2_GPIO_CLK_ENABLE()                  __GPIOA_CLK_ENABLE()
-// #define LED2_GPIO_CLK_DISABLE()                 __GPIOA_CLK_DISABLE()  
+#define SWITCH1_GPIO_PORT                          GPIOB  
 
 #define SWITCH_GPIO_CLK_ENABLE(__INDEX__)     do{if((__INDEX__) == 0) SWITCH_GPIO_CLK_ENABLE(); \
                                               }while(0)

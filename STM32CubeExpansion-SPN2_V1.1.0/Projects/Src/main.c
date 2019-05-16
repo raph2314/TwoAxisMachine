@@ -63,7 +63,9 @@
   */
 
 //#define MICROSTEPPING_MOTOR_EXAMPLE        //!< Uncomment to performe the standalone example
-#define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
+//#define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
+#define LED_EXAMPLE                          //!< Uncomment to performe the LED example
+
 #if ((defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
   #error "Please select an option only!"
 #elif ((!defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (!defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
@@ -100,7 +102,7 @@ int main(void)
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
 	
-	#ifdef NUCLEO_USE_USART
+  #ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   USART_TxWelcomeMessage();
 #endif
@@ -137,6 +139,22 @@ int main(void)
 #endif		
   }
 #endif
+
+/* CUSTOM CODE FOR MTE 325 TWO AXIS MACHINE */
+
+#ifdef LED_EXAMPLE
+
+  /* Turn on LED_GREEN on and off repeatedly */
+  while(1) {
+    BSP_LED_On(LED_GREEN);
+    HAL_Delay(50);
+    BSP_LED_Off(LED_GREEN);
+    HAL_Delay(50);
+  }
+
+#endif /* LED_EXAMPLE */ 
+
+
 }
 
 
