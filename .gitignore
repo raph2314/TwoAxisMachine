@@ -16,6 +16,3 @@ C:/Users/aksequei/Documents/MTE325/GIT/NucleoSourceCode/STM32CubeExpansion-SPN2_
 **/meson*
 **/*.toml
 **/*.ld
-
-# Schematics notes
-pins.txt

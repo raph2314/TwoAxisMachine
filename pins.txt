@@ -1,0 +1,5 @@
+5V:  Arduino Connector LHS 5th from top 
+GND: Arduino Connector LHS 6th from top
+
+SWITCH0: PB8
+LEG_GREEN: PB7
