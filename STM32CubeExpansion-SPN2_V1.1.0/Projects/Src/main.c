@@ -100,9 +100,20 @@ int main(void)
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
 	
+	GPIO_InitTypeDef GPIO_InitStruct;
+
+  /* Configure the GPIO_SWITCH pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
 	#ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
-  USART_TxWelcomeMessage();
+  //USART_TxWelcomeMessage();
 #endif
 	
 #if defined (MICROSTEPPING_MOTOR_EXAMPLE)
@@ -121,7 +132,15 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-
+		GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
+		
+		if (switchOn){
+	  USART_Transmit(&huart2, "\n\rTrue\n\r");
+		}
+		else {
+		USART_Transmit(&huart2, "\n\rFalse\n\r");
+		}
+	
 #ifdef TEST_MOTOR		
 
 		/* Check if any Application Command for L6470 has been entered by USART */
