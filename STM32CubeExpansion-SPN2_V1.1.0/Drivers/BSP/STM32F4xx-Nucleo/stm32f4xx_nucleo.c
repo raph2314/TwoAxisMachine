@@ -196,7 +196,7 @@ void BSP_LED_Init(Led_TypeDef Led)
   GPIO_InitTypeDef  GPIO_InitStruct;
   
   /* Enable the GPIO_LED Clock */
-  LEDx_GPIO_CLK_ENABLE(Led);
+  // LEDx_GPIO_CLK_ENABLE(Led);
   
   /* Configure the GPIO_LED pin */
   GPIO_InitStruct.Pin = GPIO_PIN[Led];
