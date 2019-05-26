@@ -102,27 +102,37 @@ int main(void)
 	
 	GPIO_InitTypeDef GPIO_InitStruct;
 
+	/////////////////////////////////////////////FOR SWITCH///////////////////////////////////////
   /* Configure the GPIO_SWITCH pin */
+	__GPIOB_CLK_ENABLE();
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
-	#ifdef NUCLEO_USE_USART
-  /* Transmit the initial message to the PC via UART */
-  //USART_TxWelcomeMessage();
-#endif
+	///////////////////////////////////////////////FOR LED /////////////////////////////////////////////
+	/* Configure the GPIO_LED pin */
+	GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 	
-#if defined (MICROSTEPPING_MOTOR_EXAMPLE)
+	
+	
+	#ifdef NUCLEO_USE_USART
+	/* Transmit the initial message to the PC via UART */
+	//USART_TxWelcomeMessage();
+	#endif
+		
+	#if defined (MICROSTEPPING_MOTOR_EXAMPLE)
   /* Perform a batch commands for X-NUCLEO-IHM02A1 */
   MicrosteppingMotor_Example_01();
   
   /* Infinite loop */
   while (1);
-#elif defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)
+	#elif defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)
   /* Fill the L6470_DaisyChainMnemonic structure */
   Fill_L6470_DaisyChainMnemonic();
 	
@@ -136,11 +146,14 @@ int main(void)
 		
 		if (switchOn){
 	  USART_Transmit(&huart2, "\n\rTrue\n\r");
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
 		}
 		else {
 		USART_Transmit(&huart2, "\n\rFalse\n\r");
+		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
 		}
 	
+		
 #ifdef TEST_MOTOR		
 
 		/* Check if any Application Command for L6470 has been entered by USART */
