@@ -96,6 +96,15 @@ void EXTI0_IRQHandler(void)
   }
 }
 
+void EXTI2_IRQHandler(void) {
+  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_2) != RESET) 
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_2);
+    // Do something here 
+    
+  }
+};
+
 /**
 * @brief This function handles USART2 global interrupt.
 */

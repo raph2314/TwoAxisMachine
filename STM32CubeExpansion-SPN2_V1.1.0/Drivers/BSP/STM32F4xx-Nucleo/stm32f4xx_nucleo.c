@@ -100,9 +100,9 @@
 /** @defgroup STM32F4XX_NUCLEO_LOW_LEVEL_Private_Variables
   * @{
   */ 
-GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT};
+GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT, LED_GREEN_GPIO_PORT};
 
-const uint16_t GPIO_PIN[LEDn] = {LED2_PIN};
+const uint16_t GPIO_PIN[LEDn] = {LED2_PIN, LED_GREEN_PIN};
 
 GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {KEY_BUTTON_GPIO_PORT}; 
 const uint16_t BUTTON_PIN[BUTTONn] = {KEY_BUTTON_PIN}; 
@@ -165,6 +165,23 @@ void              LCD_Delay(uint32_t delay);
 uint32_t BSP_GetVersion(void)
 {
   return __STM32F4xx_NUCLEO_BSP_VERSION;
+}
+
+void BSP_SWITCH_Init(Switch_TypeDef Switch) 
+{
+  GPIO_InitTypeDef GPIO_InitStruct; 
+  
+  /* Enable the GPIOB Clock */
+  __GPIOB_CLK_ENABLE();
+
+  /* Configure the GPIO_SWITCH pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
 }
 
 /**

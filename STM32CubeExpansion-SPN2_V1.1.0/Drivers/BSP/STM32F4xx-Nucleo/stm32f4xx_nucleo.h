@@ -67,8 +67,14 @@
   */
 typedef enum 
 {
-  LED2 = 0
+  LED2 = 0,
+  LED_GREEN = 1
 }Led_TypeDef;
+
+typedef enum
+{
+  SWITCH1 = 0,
+} Switch_TypeDef; 
 
 typedef enum 
 {  
@@ -111,10 +117,12 @@ typedef enum
 /** @addtogroup STM32F4XX_NUCLEO_LOW_LEVEL_LED
   * @{
   */
-#define LEDn                                    1
+#define LEDn                                    2
 
 #define LED2_PIN                                GPIO_PIN_5
 #define LED2_GPIO_PORT                          GPIOA
+#define LED_GREEN_PIN                           GPIO_PIN_9
+#define LED_GREEN_GPIO_PORT                     GPIOB
 #define LED2_GPIO_CLK_ENABLE()                  __GPIOA_CLK_ENABLE()
 #define LED2_GPIO_CLK_DISABLE()                 __GPIOA_CLK_DISABLE()  
 
