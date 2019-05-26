@@ -122,7 +122,7 @@ int main(void)
 	Motor_Param_Reg_Init();
  
  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
- HAL_NVIC_EnableIRQ(EXTI9_5_IRQn); 
+ HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
   while (1)
   {
 
