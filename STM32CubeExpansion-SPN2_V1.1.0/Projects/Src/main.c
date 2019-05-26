@@ -121,6 +121,8 @@ int main(void)
 
 
 	/* Configure the GPIO_LED pin */
+  GPIO_InitTypeDef  GPIO_InitStruct;
+
 	GPIO_InitStruct.Pin = GPIO_PIN_9;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
