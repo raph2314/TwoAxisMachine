@@ -118,6 +118,14 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
   
+
+
+	/* Configure the GPIO_LED pin */
+	GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
   /* Infinite loop */
   while (1)
   {
