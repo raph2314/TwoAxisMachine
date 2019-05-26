@@ -91,6 +91,9 @@ uint16_t Read_ADC(void);
 /**
   * @brief The FW main module
   */
+	
+
+	
 int main(void)
 {
   /* NUCLEO board initialization */
@@ -117,31 +120,12 @@ int main(void)
 	
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
-  
-
-
-	// /* Configure the GPIO_LED pin */
-  // GPIO_InitTypeDef  GPIO_InitStruct;
-
-	// GPIO_InitStruct.Pin = GPIO_PIN_9;
-  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  // GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
-  // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
-  /* Infinite loop */
+ 
+ HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+ HAL_NVIC_EnableIRQ(EXTI9_5_IRQn); 
   while (1)
   {
-		GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
-		
-		if (switchOn){
-	  USART_Transmit(&huart2, "\n\rTrue\n\r");
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-		}
-		else {
-		USART_Transmit(&huart2, "\n\rFalse\n\r");
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-		}
-	
+
 		
 #ifdef TEST_MOTOR		
 

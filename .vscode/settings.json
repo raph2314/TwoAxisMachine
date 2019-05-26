@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stm32f4xx_hal_adc.h": "c",
+        "xnucleoihm02a1.h": "c",
+        "example_usart.h": "c",
+        "example.h": "c",
+        "xnucleoihm02a1_interface.h": "c",
+        "stm32f4xx_it.h": "c"
+    }
+}
