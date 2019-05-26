@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "example_usart.h": "c",
+        "example.h": "c"
+    }
+}
