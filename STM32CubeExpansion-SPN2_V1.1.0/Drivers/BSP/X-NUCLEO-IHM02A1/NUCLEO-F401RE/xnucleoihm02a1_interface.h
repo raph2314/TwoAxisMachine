@@ -77,8 +77,9 @@
 #define NUCLEO_USE_USER_LED     //!< Uncomment to enable the NUCLEO User LED feature.
 #define NUCLEO_USE_USER_BUTTON  //!< Uncomment to enable the NUCLEO User Button feature.
 #define NUCLEO_USE_USART        //!< Uncomment to enable the NUCLEO USART feature.
-#define NUCLEO_USE_GREEN_LED //!< Comment out this line to use green led
-#define NUCLEO_USE_SWITCH //!< Comment out this line to use switch
+#define NUCLEO_USE_GREEN_LED    //!< Comment out this line to use green led
+#define NUCLEO_USE_SWITCH       //!< Comment out this line to use switch
+#define NUCLEO_USE_GENERAL_GPIO //!< Comment out this line to use a general GPIO device
 
 #define USE_ST1S14_PGOOD        //!< Uncomment to use ADC for reading PGOOD of ST1S14
 

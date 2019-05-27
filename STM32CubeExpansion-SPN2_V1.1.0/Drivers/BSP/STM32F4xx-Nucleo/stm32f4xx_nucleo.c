@@ -101,8 +101,10 @@
   * @{
   */ 
 GPIO_TypeDef* GPIO_PORT[LEDn] = {LED2_GPIO_PORT, LED_GREEN_GPIO_PORT};
-
 const uint16_t GPIO_PIN[LEDn] = {LED2_PIN, LED_GREEN_PIN};
+
+GPIO_TypeDef* GENERAL_GPIO_PORT[Device_n] = {GENERAL_PORT1};
+const uint16_t GENERAL_GPIO_PIN[Device_n] = {GENERAL_PIN1}; 
 
 GPIO_TypeDef* BUTTON_PORT[BUTTONn] = {KEY_BUTTON_GPIO_PORT}; 
 const uint16_t BUTTON_PIN[BUTTONn] = {KEY_BUTTON_PIN}; 
@@ -167,21 +169,21 @@ uint32_t BSP_GetVersion(void)
   return __STM32F4xx_NUCLEO_BSP_VERSION;
 }
 
-void BSP_SWITCH_Init(Switch_TypeDef Switch) 
+void BSP_GENERAL_GPIO_Init(GENERAL_GPIO_TypeDef Device) 
 {
   GPIO_InitTypeDef GPIO_InitStruct; 
   
   /* Enable the GPIOB Clock */
   __GPIOB_CLK_ENABLE();
 
-  /* Configure the GPIO_SWITCH pin */
-  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  /* Configure the GPIO pin */
+  GPIO_InitStruct.Pin = GENERAL_GPIO_PIN[Device];
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
+  HAL_GPIO_Init(GENERAL_GPIO_PORT[Device], &GPIO_InitStruct);
 
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GENERAL_GPIO_PORT[Device], GENERAL_GPIO_PIN[Device], GPIO_PIN_RESET);
 }
 
 /**

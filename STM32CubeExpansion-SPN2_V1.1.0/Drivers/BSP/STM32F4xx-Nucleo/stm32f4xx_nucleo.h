@@ -73,8 +73,9 @@ typedef enum
 
 typedef enum
 {
-  SWITCH1 = 0,
-} Switch_TypeDef; 
+  SIGGEN = 0
+} GENERAL_GPIO_TypeDef; 
+
 
 typedef enum 
 {  
@@ -113,6 +114,14 @@ typedef enum
 #if !defined (USE_STM32F4XX_NUCLEO)
  #define USE_STM32F4XX_NUCLEO
 #endif
+
+/** 
+ * @brief Definitions for general GPIO devices
+ */
+
+#define Device_n                                1
+#define GENERAL_PORT1                           GPIOB
+#define GENERAL_PIN1                            GPIO_PIN_8
 
 /** @addtogroup STM32F4XX_NUCLEO_LOW_LEVEL_LED
   * @{
