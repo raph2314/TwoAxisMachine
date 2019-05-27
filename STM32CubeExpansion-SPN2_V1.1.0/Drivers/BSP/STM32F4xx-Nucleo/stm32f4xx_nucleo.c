@@ -179,7 +179,7 @@ void BSP_GENERAL_GPIO_Init(GENERAL_GPIO_TypeDef Device)
   /* Configure the GPIO pin */
   GPIO_InitStruct.Pin = GENERAL_GPIO_PIN[Device];
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_HIGH;
   HAL_GPIO_Init(GENERAL_GPIO_PORT[Device], &GPIO_InitStruct);
 
