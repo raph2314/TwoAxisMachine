@@ -121,7 +121,7 @@ typedef enum
 
 #define Device_n                                1
 #define GENERAL_PORT1                           GPIOB
-#define GENERAL_PIN1                            GPIO_PIN_8
+#define GENERAL_PIN1                            GPIO_PIN_6
 
 /** @addtogroup STM32F4XX_NUCLEO_LOW_LEVEL_LED
   * @{

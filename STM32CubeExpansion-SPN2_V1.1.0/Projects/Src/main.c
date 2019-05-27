@@ -125,7 +125,11 @@ int main(void)
  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
   while (1)
   {
-
+    GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
+    if (!switchOn){
+      USART_Transmit(&huart2, "\n\rTrue\n\r");
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+        }
 		
 #ifdef TEST_MOTOR		
 

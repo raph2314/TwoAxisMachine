@@ -267,10 +267,9 @@ void BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
   
   if(ButtonMode == BUTTON_MODE_GPIO)
   {
-    /* Configure Button pin as input */
     GPIO_InitStruct.Pin = BUTTON_PIN[Button];
     GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-    GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
     HAL_GPIO_Init(BUTTON_PORT[Button], &GPIO_InitStruct);
   }
