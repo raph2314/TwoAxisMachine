@@ -88,6 +88,8 @@ __IO uint16_t uhADCxConvertedValue = 0;
 static void Error_Handler(void);
 uint16_t Read_ADC(void);
 
+void LEDPolling(uint8_t* prevState);
+
 /**
   * @brief The FW main module
   */
@@ -121,33 +123,79 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
  
- HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
- HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  /*
+  * @brief LED Interrupt for Lab 2 Part 2
+  */ 
+
+
+  /* Configure Button pin as input with External interrupt */
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+ // Flag for Lab 2 part 1
+ uint8_t prevState = 0; 
+
   while (1)
   {
-    GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
-    if (!switchOn){
-      USART_Transmit(&huart2, "\n\rTrue\n\r");
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-        }
-		
-#ifdef TEST_MOTOR		
 
-		/* Check if any Application Command for L6470 has been entered by USART */
-    USART_CheckAppCmd();
+    /*
+    * @brief LED Polling for Lab 2 Part 1
+    * 
+    */
+
+    // GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
+    // if (switchOn && !(prevState)){
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+    //   prevState=1;
+    // }
+    // if (!switchOn && prevState){
+    //   prevState=0;
+    // }
+
+
+   /*
+    * @brief Motor Testing for Lab 1 
+    * 
+    */
+
 		
-#else
-		
-		uint16_t myADCVal;
-		myADCVal = Read_ADC();
-		USART_Transmit(&huart2, " ADC Read: ");
-	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-	  USART_Transmit(&huart2, " \n\r");
-#endif		
+    // #ifdef TEST_MOTOR		
+
+    //     /* Check if any Application Command for L6470 has been entered by USART */
+    //     USART_CheckAppCmd();
+        
+    // #else
+        
+    //     uint16_t myADCVal;
+    //     myADCVal = Read_ADC();
+    //     USART_Transmit(&huart2, " ADC Read: ");
+    //     USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+    //     USART_Transmit(&huart2, " \n\r");
+    // #endif		
   }
 #endif
 }
 
+void LEDPolling(uint8_t* prevState) {
+    GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
+    if (switchOn && !(*prevState)){
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+      *prevState=1;
+    }
+    if (!switchOn && *prevState){
+      *prevState=0;
+    }
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

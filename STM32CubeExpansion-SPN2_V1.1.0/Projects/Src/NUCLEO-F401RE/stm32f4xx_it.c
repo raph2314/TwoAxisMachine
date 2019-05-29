@@ -97,10 +97,11 @@ void EXTI0_IRQHandler(void)
 }
 
 void EXTI9_5_IRQHandler(void) {
-  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_6) != RESET)
+  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
   {
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_6);
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
   }
 }
 
