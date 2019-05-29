@@ -121,29 +121,34 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
  
- HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
- HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+//  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+//  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  uint8_t LEDHigh = 0;
   while (1)
   {
     GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
-    if (!switchOn){
-      USART_Transmit(&huart2, "\n\rTrue\n\r");
+    if (switchOn && !LEDHigh){
       HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-        }
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+      LEDHigh = 1; 
+    }
+    else if(!switchOn) {
+      LEDHigh = 0;
+    }
 		
-#ifdef TEST_MOTOR		
+// #ifdef TEST_MOTOR		
 
-		/* Check if any Application Command for L6470 has been entered by USART */
-    USART_CheckAppCmd();
+// 		/* Check if any Application Command for L6470 has been entered by USART */
+//     USART_CheckAppCmd();
 		
-#else
+// #else
 		
-		uint16_t myADCVal;
-		myADCVal = Read_ADC();
-		USART_Transmit(&huart2, " ADC Read: ");
-	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-	  USART_Transmit(&huart2, " \n\r");
-#endif		
+// 		uint16_t myADCVal;
+// 		myADCVal = Read_ADC();
+// 		USART_Transmit(&huart2, " ADC Read: ");
+// 	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+// 	  USART_Transmit(&huart2, " \n\r");
+// #endif		
   }
 #endif
 }
