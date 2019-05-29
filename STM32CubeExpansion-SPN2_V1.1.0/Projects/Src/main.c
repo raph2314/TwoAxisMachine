@@ -87,13 +87,12 @@ __IO uint16_t uhADCxConvertedValue = 0;
 //static void SystemClock_Config(void);
 static void Error_Handler(void);
 uint16_t Read_ADC(void);
+void lab2LEDPolling(uint8_t* LEDState); 
+void lab2LEDInterrupt(void); 
 
 /**
   * @brief The FW main module
   */
-	
-
-	
 int main(void)
 {
   /* NUCLEO board initialization */
@@ -121,21 +120,15 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
  
-//  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
-//  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-  uint8_t LEDHigh = 0;
+  // Flag for Lab 2 part 1
+  uint8_t* LEDHigh = 0;
+
+  // lab2LEDInterrupt();  //!< Uncomment to set up the interrupt for Lab 2 part 2
   while (1)
   {
-    GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
-    if (switchOn && !LEDHigh){
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
-      LEDHigh = 1; 
-    }
-    else if(!switchOn) {
-      LEDHigh = 0;
-    }
-		
+    lab2LEDPolling(LEDHigh); //!< Uncomment to execute the polling loop for Lab 2 part 1
+
+
 // #ifdef TEST_MOTOR		
 
 // 		/* Check if any Application Command for L6470 has been entered by USART */
@@ -199,6 +192,48 @@ uint16_t Read_ADC(void)
   
   return HAL_ADC_GetValue(&HADC);
 }
+
+
+
+void lab2LEDPolling(uint8_t* LEDState) {
+    // Read Square Wave 
+    GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
+
+    // Turn LED on and off once on rising edge
+    if (switchOn && !(*LEDState)){
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
+      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+      *LEDState = 1; 
+    }
+    // Reset LEDState on falling edge 
+    else if(!switchOn) {
+      *LEDState = 0;
+    }
+}
+
+void lab2LEDInterrupt() {
+  // Configure Pin for input signal from the sigGen
+  GPIO_InitTypeDef  GPIO_InitStruct;
+  
+  // /* Enable the GPIO_LED Clock */
+  // GPIOB_CLK_ENABLE();
+  
+  /* Configure the GPIO_LED pin */
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET); 
+
+  // Setup the interrupt on line 9 for the 
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+}
+
+
 
 /**
   * @}

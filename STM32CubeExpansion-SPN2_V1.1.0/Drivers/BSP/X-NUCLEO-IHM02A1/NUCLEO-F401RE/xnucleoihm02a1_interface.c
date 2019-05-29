@@ -143,9 +143,8 @@ void SystemClock_Config(void)
 void MX_GPIO_Init(void)
 {
 #ifdef NUCLEO_USE_USER_BUTTON
-  /* Configures Button GPIO and EXTI Line */
+  /* Configures Button GPIO */
   BSP_PB_Init(BUTTON_KEY, BUTTON_MODE_EXTI);
-  BSP_PB_Init(GPIO_PIN_8, BUTTON_MODE_GPIO);
 #endif
 
 #ifdef NUCLEO_USE_USER_LED
