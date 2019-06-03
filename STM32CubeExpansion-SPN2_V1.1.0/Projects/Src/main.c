@@ -86,6 +86,7 @@ __IO uint16_t uhADCxConvertedValue = 0;
 /* Private function prototypes -----------------------------------------------*/
 //static void SystemClock_Config(void);
 static void Error_Handler(void);
+void GPIO_CustomInit();
 uint16_t Read_ADC(void);
 
 /**
@@ -99,11 +100,12 @@ int main(void)
   
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
-	
-	GPIO_InitTypeDef GPIO_InitStruct;
 
-  /************************************** POLLING ****************************/
+  /********************************     POLLING     ****************************/
   /*
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -118,7 +120,13 @@ int main(void)
   USART_Transmit(&huart2, "\n\rTrue\n\r");
 
   */
-  /**************************************************************************/
+  /****************************      Interrupt     ****************************/
+
+  GPIO_CustomInit();
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  /*************************************************************************/
 	#ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   //USART_TxWelcomeMessage();
@@ -136,6 +144,8 @@ int main(void)
 	
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
+  
+
   
   /* Infinite loop */
   while (1)
@@ -159,6 +169,25 @@ int main(void)
 #endif
 }
 
+void GPIO_CustomInit (){
+  GPIO_InitTypeDef GPIO_InitStruct;
+
+  //LED output to pin 9
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); 
+
+  //Setup interrupt for pin 8
+  GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.
