@@ -102,7 +102,8 @@ int main(void)
 	
 	GPIO_InitTypeDef GPIO_InitStruct;
 
-  /* Configure the GPIO_SWITCH pin */
+  /************************************** POLLING ****************************/
+  /*
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -111,6 +112,13 @@ int main(void)
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_8, GPIO_PIN_RESET);
+
+  GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8); 
+
+  USART_Transmit(&huart2, "\n\rTrue\n\r");
+
+  */
+  /**************************************************************************/
 	#ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   //USART_TxWelcomeMessage();
@@ -132,14 +140,7 @@ int main(void)
   /* Infinite loop */
   while (1)
   {
-		GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8);
-		
-		if (switchOn){
-	  USART_Transmit(&huart2, "\n\rTrue\n\r");
-		}
-		else {
-		USART_Transmit(&huart2, "\n\rFalse\n\r");
-		}
+
 	
 #ifdef TEST_MOTOR		
 
