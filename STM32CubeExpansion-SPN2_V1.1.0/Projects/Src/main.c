@@ -105,7 +105,6 @@ int main(void)
   /*
   GPIO_InitTypeDef GPIO_InitStruct;
 
-
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -118,13 +117,15 @@ int main(void)
   GPIO_PinState switchOn=HAL_GPIO_ReadPin(GPIOB,GPIO_PIN_8); 
 
   USART_Transmit(&huart2, "\n\rTrue\n\r");
-
   */
-  /****************************      Interrupt     ****************************/
 
+  /* Custom GPIO setup */
   GPIO_CustomInit();
+  /****************************      Interrupt     ****************************/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+  HAL_NVIC_SetPriority(EXT15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /*************************************************************************/
 	#ifdef NUCLEO_USE_USART
@@ -172,21 +173,26 @@ int main(void)
 void GPIO_CustomInit (){
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  //LED output to pin 9
-  GPIO_InitStruct.Pin = GPIO_PIN_9;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
+  // //LED output to pin 9
+  // GPIO_InitStruct.Pin = GPIO_PIN_9;
+  // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  // GPIO_InitStruct.Pull = GPIO_PULLUP;
+  // GPIO_InitStruct.Speed = GPIO_SPEED_FAST;
   
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); 
+  // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); 
 
   //Setup interrupt for pin 8
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING; 
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-  
+
+  //Setup interrupt for pin 13
+  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 }
 
 /**
