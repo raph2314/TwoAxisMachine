@@ -182,17 +182,17 @@ void GPIO_CustomInit (){
   // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); 
 
-  //Setup interrupt for pin 8
+  //Setup vertical interrupt for pin 8
   GPIO_InitStruct.Pin = GPIO_PIN_8;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  //Setup interrupt for pin 13
-  GPIO_InitStruct.Pin = GPIO_PIN_13;
+  //Setup horizontal interrupt for pin 4
+  GPIO_InitStruct.Pin = GPIO_PIN_4;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
 /**

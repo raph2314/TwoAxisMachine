@@ -96,6 +96,14 @@ void EXTI0_IRQHandler(void)
   }
 }
 
+//Horizontal limit switch interrupt 
+void EXTI4_IRQHandler(void) {
+  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_4) != RESET)
+  {
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_4);
+  }
+}
+
 //Vertical limit switch interrupt
 void EXTI9_5_IRQHandler(void) {
   if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
@@ -105,13 +113,7 @@ void EXTI9_5_IRQHandler(void) {
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
   }
 }
-//Horizontal limit switch interrupt 
-void EXTI15_10_IRQHandler(void) {
-  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_13) != RESET)
-  {
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_13);
-  }
-}
+
 /**
 * @brief This function handles USART2 global interrupt.
 */
