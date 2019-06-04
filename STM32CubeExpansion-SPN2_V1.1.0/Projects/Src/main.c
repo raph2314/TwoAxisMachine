@@ -121,6 +121,7 @@ int main(void)
 
   /* Custom GPIO setup */
   GPIO_CustomInit();
+
   /****************************      Interrupt     ****************************/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
@@ -128,7 +129,8 @@ int main(void)
   HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
   /*************************************************************************/
-	#ifdef NUCLEO_USE_USART
+
+#ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   //USART_TxWelcomeMessage();
 #endif
