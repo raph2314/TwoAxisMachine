@@ -125,14 +125,14 @@ int main(void)
   /****************************      Interrupt     ****************************/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-  HAL_NVIC_SetPriority(EXT15_10_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 
   /*************************************************************************/
 
 #ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
-  //USART_TxWelcomeMessage();
+  USART_TxWelcomeMessage();
 #endif
 	
 #if defined (MICROSTEPPING_MOTOR_EXAMPLE)
@@ -149,27 +149,34 @@ int main(void)
 	Motor_Param_Reg_Init();
   
 
+  L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
+  L6470_Run(1, L6470_DIR_FWD_ID, 500); 
+
+
+  while(1);
   
-  /* Infinite loop */
-  while (1)
-  {
+#endif
+  
+//   /* Infinite loop */
+//   while (1)
+//   {
 
 	
-#ifdef TEST_MOTOR		
+// #ifdef TEST_MOTOR		
 
-		/* Check if any Application Command for L6470 has been entered by USART */
-    USART_CheckAppCmd();
+// 		/* Check if any Application Command for L6470 has been entered by USART */
+//     USART_CheckAppCmd();
 		
-#else
+// #else
 		
-		uint16_t myADCVal;
-		myADCVal = Read_ADC();
-		USART_Transmit(&huart2, " ADC Read: ");
-	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-	  USART_Transmit(&huart2, " \n\r");
-#endif		
-  }
-#endif
+// 		uint16_t myADCVal;
+// 		myADCVal = Read_ADC();
+// 		USART_Transmit(&huart2, " ADC Read: ");
+// 	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+// 	  USART_Transmit(&huart2, " \n\r");
+// #endif		
+//   }
+// #endif
 }
 
 void GPIO_CustomInit (){
@@ -186,13 +193,13 @@ void GPIO_CustomInit (){
 
   //Setup vertical interrupt for pin 8
   GPIO_InitStruct.Pin = GPIO_PIN_8;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-  //Setup horizontal interrupt for pin 4
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  // Setup horizontal interrupt for pin A1
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }

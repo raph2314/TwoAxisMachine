@@ -74,13 +74,15 @@ void SysTick_Handler(void)
 
 /**
 * @brief This function handles EXTI Line1 interrupt.
+*        Horizontal limit switch interrupt 
 */
 void EXTI1_IRQHandler(void)
 {
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
   {
+    L6470_HardStop(1); 
+    L6470_Run(1, L6470_DIR_REV_ID, 500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
-		BSP_L6470_FlagEventManager();
   }
 }
 
@@ -96,20 +98,12 @@ void EXTI0_IRQHandler(void)
   }
 }
 
-//Horizontal limit switch interrupt 
-void EXTI4_IRQHandler(void) {
-  if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_4) != RESET)
-  {
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_4);
-  }
-}
-
 //Vertical limit switch interrupt
 void EXTI9_5_IRQHandler(void) {
   if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
   {
-    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_SET);
-    // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET);
+    L6470_HardStop(0); 
+    L6470_Run(0, L6470_DIR_REV_ID, 10000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
   }
 }
