@@ -72,19 +72,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
 
-/**
-* @brief This function handles EXTI Line1 interrupt.
-*        Horizontal limit switch interrupt 
-*/
-void EXTI1_IRQHandler(void)
-{
-	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
-  {
-    L6470_HardStop(1); 
-    L6470_Run(1, L6470_DIR_REV_ID, 500); 
-    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
-  }
-}
 
 /**
 * @brief This function handles EXTI Line0 interrupt.
@@ -98,15 +85,57 @@ void EXTI0_IRQHandler(void)
   }
 }
 
-//Vertical limit switch interrupt
+//Vertical limit switch interrupt                         //NEED TO SET CORRECT SIDES
 void EXTI9_5_IRQHandler(void) {
+  
+  // if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET) {
+  //   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET); 
+  //   __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
+  // }
+  // else if()
+
+  //PB8 Vertial Top
   if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
   {
     L6470_HardStop(0); 
     L6470_Run(0, L6470_DIR_REV_ID, 10000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
+
+  }
+  //PB9 Vertical Bottom
+  else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_9) != RESET ){
+    L6470_HardStop(0); 
+    L6470_Run(0, L6470_DIR_REV_ID, 10000); 
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_9);
+
+
+  }
+
+  //PC7 Horizontal Right
+  else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_7) != RESET ){
+    L6470_HardStop(1); 
+    L6470_Run(1, L6470_DIR_REV_ID, 500); 
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_7);
   }
 }
+
+/**
+* @brief This function handles EXTI Line1 interrupt.
+*        Horizontal limit switch interrupt 
+*/
+void EXTI1_IRQHandler(void)
+{
+   //PA1 Horizontal Right
+	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
+  {
+    L6470_HardStop(1); 
+    L6470_Run(1, L6470_DIR_REV_ID, 500); 
+    __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
+
+  }
+}
+
+
 
 /**
 * @brief This function handles USART2 global interrupt.

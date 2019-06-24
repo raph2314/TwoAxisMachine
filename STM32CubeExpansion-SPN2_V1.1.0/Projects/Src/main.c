@@ -125,8 +125,8 @@ int main(void)
   /****************************      Interrupt     ****************************/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 
   /*************************************************************************/
 
@@ -148,10 +148,8 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
   
-
   L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
   L6470_Run(1, L6470_DIR_FWD_ID, 500); 
-
 
   while(1);
   
@@ -191,8 +189,14 @@ void GPIO_CustomInit (){
   // HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
   // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_9, GPIO_PIN_RESET); 
 
-  //Setup vertical interrupt for pin 8
+  //Setup vertical interrupt for pin B8
   GPIO_InitStruct.Pin = GPIO_PIN_8;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  //Setup vertical interrupt for pin B9
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -202,6 +206,13 @@ void GPIO_CustomInit (){
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+  // Setup horizontal interrupt for pin C7
+  GPIO_InitStruct.Pin = GPIO_PIN_7;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
 }
 
 /**
