@@ -459,7 +459,7 @@ void NUCLEO_Board_Init(void)
 
 #ifdef NUCLEO_USE_USER_LED
   /* Perform 3 repetition of blinking user LED at 50% duty cycle with 250 ms as period */
-  User_LED_Blinking(3, 750);
+  //  User_LED_Blinking(3, 750);
 #endif
 
 //#ifdef NUCLEO_USE_ADC

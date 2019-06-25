@@ -62,7 +62,7 @@
   * @{
   */
 
-//#define MICROSTEPPING_MOTOR_EXAMPLE        //!< Uncomment to performe the standalone example
+// #define MICROSTEPPING_MOTOR_EXAMPLE        //!< Uncomment to performe the standalone example
 #define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
 #if ((defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
   #error "Please select an option only!"
@@ -148,33 +148,33 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
   
-  L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
-  L6470_Run(1, L6470_DIR_FWD_ID, 500); 
+  // L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
+  // L6470_Run(1, L6470_DIR_FWD_ID, 500); 
 
-  while(1);
+  // while(1);
   
-#endif
+// #endif
   
-//   /* Infinite loop */
-//   while (1)
-//   {
+  /* Infinite loop */
+  while (1)
+  {
 
 	
-// #ifdef TEST_MOTOR		
+#ifdef TEST_MOTOR		
 
-// 		/* Check if any Application Command for L6470 has been entered by USART */
-//     USART_CheckAppCmd();
+		/* Check if any Application Command for L6470 has been entered by USART */
+    USART_CheckAppCmd();
 		
-// #else
+#else
 		
-// 		uint16_t myADCVal;
-// 		myADCVal = Read_ADC();
-// 		USART_Transmit(&huart2, " ADC Read: ");
-// 	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-// 	  USART_Transmit(&huart2, " \n\r");
-// #endif		
-//   }
-// #endif
+		uint16_t myADCVal;
+		myADCVal = Read_ADC();
+		USART_Transmit(&huart2, " ADC Read: ");
+	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+	  USART_Transmit(&huart2, " \n\r");
+#endif		
+  }
+#endif
 }
 
 void GPIO_CustomInit (){

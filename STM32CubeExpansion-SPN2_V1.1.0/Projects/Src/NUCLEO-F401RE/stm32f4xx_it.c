@@ -98,14 +98,14 @@ void EXTI9_5_IRQHandler(void) {
   if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
   {
     L6470_HardStop(0); 
-    L6470_Run(0, L6470_DIR_REV_ID, 10000); 
+    L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
 
   }
   //PB9 Vertical Bottom
   else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_9) != RESET ){
     L6470_HardStop(0); 
-    L6470_Run(0, L6470_DIR_REV_ID, 10000); 
+    L6470_Run(0, L6470_DIR_REV_ID, 20000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_9);
 
 
@@ -114,7 +114,7 @@ void EXTI9_5_IRQHandler(void) {
   //PC7 Horizontal Right
   else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_7) != RESET ){
     L6470_HardStop(1); 
-    L6470_Run(1, L6470_DIR_REV_ID, 500); 
+    L6470_Run(1, L6470_DIR_FWD_ID, 500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_7);
   }
 }
@@ -125,13 +125,12 @@ void EXTI9_5_IRQHandler(void) {
 */
 void EXTI1_IRQHandler(void)
 {
-   //PA1 Horizontal Right
+   //PA1 Horizontal Left
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
   {
     L6470_HardStop(1); 
     L6470_Run(1, L6470_DIR_REV_ID, 500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
-
   }
 }
 
