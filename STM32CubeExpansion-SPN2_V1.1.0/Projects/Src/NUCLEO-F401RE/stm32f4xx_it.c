@@ -85,34 +85,47 @@ void EXTI0_IRQHandler(void)
   }
 }
 
-//Vertical limit switch interrupt                         //NEED TO SET CORRECT SIDES
-void EXTI9_5_IRQHandler(void) {
-  
-  // if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET) {
-  //   HAL_GPIO_WritePin(GPIOA, GPIO_PIN_1, GPIO_PIN_SET); 
-  //   __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
-  // }
-  // else if()
-
-  //PB8 Vertial Top
+//Limit switch interrupt for PB8, PB9, and PC7
+void EXTI9_5_IRQHandler(void) {  
+  //PB8 Vertical Top
   if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_8) != RESET)
   {
+    /*
+    * @Edge-Case
+    * 
+    * Bottom limit switch triggers interrupt
+    * slightly after Top limit switch.
+    *  
+    * Give precedence to Bottom (PC9)
+    */
+    while(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_9) != RESET); 
+
+
     L6470_HardStop(0); 
     L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_8);
-
   }
+
   //PB9 Vertical Bottom
   else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_9) != RESET ){
     L6470_HardStop(0); 
     L6470_Run(0, L6470_DIR_REV_ID, 20000); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_9);
-
-
   }
 
   //PC7 Horizontal Right
   else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_7) != RESET ){
+
+    /* 
+    * @Edge-Case
+    * 
+    * Left limit switch triggers interrupt
+    * slightly after Right limit switch
+    * 
+    * Give precedence to Left (PA1)
+    */
+   while(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET);
+
     L6470_HardStop(1); 
     L6470_Run(1, L6470_DIR_FWD_ID, 500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_7);
