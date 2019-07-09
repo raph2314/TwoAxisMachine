@@ -114,7 +114,7 @@ void EXTI9_5_IRQHandler(void) {
   //PC7 Horizontal Right
   else if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_7) != RESET ){
     L6470_HardStop(1); 
-    L6470_Run(1, L6470_DIR_FWD_ID, 500); 
+    L6470_Run(1, L6470_DIR_REV_ID, 27500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_7);
   }
 }
@@ -129,7 +129,7 @@ void EXTI1_IRQHandler(void)
 	if(__HAL_GPIO_EXTI_GET_IT(GPIO_PIN_1) != RESET)
   {
     L6470_HardStop(1); 
-    L6470_Run(1, L6470_DIR_REV_ID, 500); 
+    L6470_Run(1, L6470_DIR_FWD_ID, 27500); 
     __HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);
   }
 }

@@ -36,7 +36,7 @@
 #include "example_usart.h"
 #include "stm32f4xx_hal_adc.h"
 
-#define TEST_MOTOR	//!< Comment out this line to test the ADC
+// #define TEST_MOTOR	//!< Comment out this line to test the ADC	
 
 /**
   * @defgroup   MotionControl
@@ -63,15 +63,22 @@
   */
 
 // #define MICROSTEPPING_MOTOR_EXAMPLE        //!< Uncomment to performe the standalone example
-#define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
-#if ((defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
-  #error "Please select an option only!"
-#elif ((!defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (!defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
-  #error "Please select an option!"
-#endif
-#if (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE) && (!defined (NUCLEO_USE_USART)))
-  #error "Please define "NUCLEO_USE_USART" in "stm32fxxx_x-nucleo-ihm02a1.h"!"
-#endif
+// #define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
+// #define MOTOR_EDGE_RAMPUP 
+// #define MOTOR_EDGE_BOTH_MOTOR //!< Uncomment to perform edge case 1 ()
+#define MOTOR_DEMO_1 //!< Uncomment to perform step demo
+// #define MOTOR_DEMO_2 //!< HACKY: Uncomment to perform step demo
+// #define MOTOR_DEMO_3 //!< Uncomment to perform max speed demo
+// #define ADC_MOTOR_CONTROL //!< Uncomment for ADC demo and final competition 
+
+// #if ((defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
+//   #error "Please select an option only!"
+// #elif ((!defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (!defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
+//   #error "Please select an option!"
+// #endif
+// #if (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE) && (!defined (NUCLEO_USE_USART)))
+//   #error "Please define "NUCLEO_USE_USART" in "stm32fxxx_x-nucleo-ihm02a1.h"!"
+// #endif
 
 /**
   * @}
@@ -101,7 +108,7 @@ int main(void)
   /* X-NUCLEO-IHM02A1 initialization */
   BSP_Init();
 
-  /********************************     POLLING     ****************************/
+  /********************************  FROM POLLING     ****************************/
   /*
   GPIO_InitTypeDef GPIO_InitStruct;
 
@@ -130,6 +137,16 @@ int main(void)
 
   /*************************************************************************/
 
+  //Motor Initializations
+  /* Fill the L6470_DaisyChainMnemonic structure */
+  Fill_L6470_DaisyChainMnemonic();
+  
+  /*Initialize the motor parameters */
+  Motor_Param_Reg_Init();
+
+  L6470_HardStop(1);
+  L6470_HardStop(0);
+
 #ifdef NUCLEO_USE_USART
   /* Transmit the initial message to the PC via UART */
   USART_TxWelcomeMessage();
@@ -148,39 +165,124 @@ int main(void)
 	/*Initialize the motor parameters */
 	Motor_Param_Reg_Init();
   
-  // L6470_Run(0, L6470_DIR_FWD_ID, 20000); 
-  // L6470_Run(1, L6470_DIR_FWD_ID, 500); 
+  /*Initialize the ADC*/
+  MX_ADC1_Init(); 
 
-  // while(1);
-  
 // #endif
-  
-  /* Infinite loop */
+
   while (1)
   {
 
-	
-#ifdef TEST_MOTOR		
+    #ifdef TEST_MOTOR		
 
-		/* Check if any Application Command for L6470 has been entered by USART */
-    USART_CheckAppCmd();
-		
-#else
-		
-		uint16_t myADCVal;
-		myADCVal = Read_ADC();
-		USART_Transmit(&huart2, " ADC Read: ");
-	  USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-	  USART_Transmit(&huart2, " \n\r");
-#endif		
+        /* Check if any Application Command for L6470 has been entered by USART */
+        USART_CheckAppCmd();
+        
+    #else
+
+        //
+        uint16_t myADCVal;
+        myADCVal = Read_ADC();
+        USART_Transmit(&huart2, " ADC Read: ");
+        USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+        USART_Transmit(&huart2, " \n\r");
+    #endif		
   }
+  #elif defined(MOTOR_EDGE_RAMPUP)
+  /*Ensure you mark the starting position, and that there is sufficient
+    amount of vertical range */
+    L6470_Run(0,L6470_DIR_REV_ID,27500);
+    HAL_Delay(2500); //run for 2.5s
+    L6470_HardStop(0);
+    HAL_Delay(10000);
+    L6470_Run(0,L6470_DIR_REV_ID,27500);
+    HAL_Delay(5000); //run for 5s
+    L6470_HardStop(0);
+    HAL_Delay(10000);
+    L6470_Run(0,L6470_DIR_REV_ID,27500);
+    HAL_Delay(10000); //run for 10s
+    L6470_HardStop(0);
+    HAL_Delay(10000);
+    L6470_Run(0,L6470_DIR_REV_ID,27500);
+    HAL_Delay(15000); //run for 15s
+    L6470_HardStop(0);
+    HAL_Delay(10000);
+    L6470_GoHome(0);
+    while (1);
+  #elif defined(MOTOR_EDGE_BOTH_MOTOR)
+  /*May need to change the direction */
+    L6470_Run(0,L6470_DIR_REV_ID,27500);
+    L6470_Run(1, L6470_DIR_FWD_ID, 27500);
+    HAL_Delay(20000);
+
+    L6470_HardStop(1);
+    L6470_HardStop(0);
+    while (1);
+  #elif defined (MOTOR_DEMO_1) //!!! NEED TO CHECK DIRECTION
+    L6470_Move(0,L6470_DIR_FWD_ID,1282000); //Should move up vertically by 100mm, determined from motor characterization
+    while(1);
+
+  #elif defined (MOTOR_DEMO_2)
+    L6470_Move(0,L6470_DIR_REV_ID,1265500); //Should move down vertically by 100mm
+    while(1);
+
+  #elif defined (MOTOR_DEMO_3)
+    L6470_Run(0,L6470_DIR_FWD_ID,27500); //Should move down vertically by 100mm
+    HAL_Delay(24096); //Value determined from motor characterization
+    L6470_HardStop(0);
+    HAL_Delay(5000);
+    L6470_Run(0,L6470_DIR_REV_ID,27500); //Should move up vertically by 100mm
+    HAL_Delay(24096);
+    L6470_HardStop(0);
+    while(1);
+  #elif defined (ADC_MOTOR_CONTROL)
+
+      /* Fill the L6470_DaisyChainMnemonic structure */
+    Fill_L6470_DaisyChainMnemonic();
+    
+    /*Initialize the motor parameters */
+    Motor_Param_Reg_Init();
+    
+    /*Initialize the ADC*/
+    MX_ADC1_Init(); 
+
+    uint16_t HorizStopped = 0;
+    uint16_t HorizSpeedSet = 0;
+    uint16_t myADCVal;
+
+    while(1) {
+        myADCVal = Read_ADC();
+        USART_Transmit(&huart2, " ADC Read: ");
+        USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
+        USART_Transmit(&huart2, " \n\r");
+
+        //Stopped condition 
+        if (0x05DC < myADCVal && 0x09C4 > myADCVal && !HorizStopped) {
+          L6470_HardStop(1);  
+          HorizSpeedSet = 0; 
+          HorizStopped = 1; 
+        }
+
+        // Forward condition
+        else if ((0x05DC > myADCVal) && !HorizSpeedSet) {
+          L6470_Run(1,L6470_DIR_FWD_ID,5000);
+          HorizSpeedSet = 1;
+          HorizStopped = 0; 
+        }
+        else if (0x09C4 < myADCVal && !HorizSpeedSet) {
+          L6470_Run(1,L6470_DIR_REV_ID,5000);
+          HorizSpeedSet = 1; 
+          HorizStopped = 0;
+        }
+    }
+
 #endif
 }
 
 void GPIO_CustomInit (){
   GPIO_InitTypeDef GPIO_InitStruct;
 
-  // //LED output to pin 9
+  //LED output to pin 9
   // GPIO_InitStruct.Pin = GPIO_PIN_9;
   // GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   // GPIO_InitStruct.Pull = GPIO_PULLUP;
@@ -205,7 +307,7 @@ void GPIO_CustomInit (){
   GPIO_InitStruct.Pin = GPIO_PIN_1;
   GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING; 
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);	
 
   // Setup horizontal interrupt for pin C7
   GPIO_InitStruct.Pin = GPIO_PIN_7;

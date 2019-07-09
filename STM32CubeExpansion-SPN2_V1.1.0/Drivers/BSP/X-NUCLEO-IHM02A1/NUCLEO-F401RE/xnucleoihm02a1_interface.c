@@ -402,23 +402,26 @@ void MX_ADC1_Init(void)
     /**Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion) 
     */
   hadc1.Instance = ADC1;
-//  hadc1.Init.ClockPrescaler = ;
-//  hadc1.Init.Resolution = ;
-//  hadc1.Init.ScanConvMode = ;
-//  hadc1.Init.ContinuousConvMode = ;
-//  hadc1.Init.DiscontinuousConvMode = ;
-//  hadc1.Init.ExternalTrigConvEdge = ;
-//  hadc1.Init.DataAlign = ;
-//  hadc1.Init.NbrOfConversion = ;
-//  hadc1.Init.DMAContinuousRequests = ;
-//  hadc1.Init.EOCSelection = ;
-//  HAL_ADC_Init(&hadc1);
+  hadc1.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION12b;
+  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = ENABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = ENABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  HAL_ADC_Init(&hadc1);
 
-//    /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
-//    */
-//  sConfig.Channel = ADC_CHANNEL_8;		/* Currently set to input pin PB0, adjust as needed */
+
+   /**Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time. 
+   */
+  sConfig.Channel = ADC_CHANNEL_8;		/* Currently set to input pin PB0, adjust as needed */
   sConfig.Rank = 1;
-// sConfig.SamplingTime = ;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  sConfig.Offset=0;
   HAL_ADC_ConfigChannel(&hadc1, &sConfig);
 
 }
