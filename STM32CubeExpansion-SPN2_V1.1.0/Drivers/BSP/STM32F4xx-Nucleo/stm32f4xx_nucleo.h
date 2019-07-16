@@ -230,7 +230,7 @@ typedef enum
 
 #define NUCLEO_ADCx_CHANNEL                       ADC_CHANNEL_8
    
-#define NUCLEO_ADCx_GPIO_PORT                       GPIOB
+#define NUCLEO_ADCx_GPIO_PORT                       GPIOA
 #define NUCLEO_ADCx_GPIO_PIN                        GPIO_PIN_0
 #define NUCLEO_ADCx_GPIO_CLK_ENABLE()             __GPIOB_CLK_ENABLE()
 #define NUCLEO_ADCx_GPIO_CLK_DISABLE()            __GPIOB_CLK_DISABLE()

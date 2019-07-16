@@ -66,10 +66,12 @@
 // #define MICROSTEPPING_MOTOR_USART_EXAMPLE  //!< Uncomment to performe the USART example
 // #define MOTOR_EDGE_RAMPUP 
 // #define MOTOR_EDGE_BOTH_MOTOR //!< Uncomment to perform edge case 1 ()
-#define MOTOR_DEMO_1 //!< Uncomment to perform step demo
+// #define MOTOR_DEMO_1 //!< Uncomment to perform step demo
 // #define MOTOR_DEMO_2 //!< HACKY: Uncomment to perform step demo
 // #define MOTOR_DEMO_3 //!< Uncomment to perform max speed demo
-// #define ADC_MOTOR_CONTROL //!< Uncomment for ADC demo and final competition 
+#define ADC_MOTOR_CONTROL //!< Uncomment for ADC demo and final competition 
+// #define SERIAL_USART_EXAMPLE
+
 
 // #if ((defined (MICROSTEPPING_MOTOR_EXAMPLE)) && (defined (MICROSTEPPING_MOTOR_USART_EXAMPLE)))
 //   #error "Please select an option only!"
@@ -274,6 +276,11 @@ int main(void)
           HorizSpeedSet = 1; 
           HorizStopped = 0;
         }
+    }
+  #elif defined (SERIAL_USART_EXAMPLE)
+    while(1) {
+      USART_Transmit(&huart2, "A");
+      HAL_Delay(1000);
     }
 
 #endif
