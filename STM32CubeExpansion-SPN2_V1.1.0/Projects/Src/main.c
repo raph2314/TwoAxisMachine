@@ -96,7 +96,7 @@ __IO uint16_t uhADCxConvertedValue = 0;
 //static void SystemClock_Config(void);
 static void Error_Handler(void);
 void GPIO_CustomInit();
-uint16_t Read_ADC(void);
+uint16_t* Read_ADC(void);
 
 /**
   * @brief The FW main module
@@ -248,34 +248,108 @@ int main(void)
     /*Initialize the ADC*/
     MX_ADC1_Init(); 
 
-    uint16_t HorizStopped = 0;
-    uint16_t HorizSpeedSet = 0;
-    uint16_t myADCVal;
+    // Variables to track the "stopped" state of the motor
+    uint16_t horizStopped = 0;
+    uint16_t verticalStopped = 0;
+
+    // Variables to track the "speed set" state of the motor
+    uint16_t horizSpeedSet, verticalSpeedSet;
+    
+    // ADC values, broken down into horizontal and vertical components
+    uint16_t* myADCVal;
+    uint16_t horizontalVal, verticalVal;
+
+    // Current speed that the motors are set to
+    uint16_t horizSpeed, verticalSpeed;
+
+    // Previous speed that the motors were set to, used for filtering out noise
+    uint16_t prevHorizSpeed = 0; 
+    uint16_t prevVerticalSpeed = 0; 
+    
+    // Track direction of both motors
+    eL6470_DirId_t horizDir;
+    eL6470_DirId_t verticalDir;
 
     while(1) {
         myADCVal = Read_ADC();
-        USART_Transmit(&huart2, " ADC Read: ");
-        USART_Transmit(&huart2, num2hex(myADCVal, WORD_F));
-        USART_Transmit(&huart2, " \n\r");
+        horizontalVal= myADCVal[0];
+        verticalVal=myADCVal[1];
 
-        //Stopped condition 
-        if (0x05DC < myADCVal && 0x09C4 > myADCVal && !HorizStopped) {
-          L6470_HardStop(1);  
-          HorizSpeedSet = 0; 
-          HorizStopped = 1; 
+        // Compute different between previous value. Only set speed when the change is greater than 15
+        horizSpeedSet = (abs(horizontalVal - prevHorizSpeed) > 32) ? 0 : 1; 
+        verticalSpeedSet = (abs(verticalVal - prevVerticalSpeed) > 32) ? 0: 1;
+
+        //////////////////////////////
+        // HORIZONTAL MOTOR CONTROL //
+        //////////////////////////////
+
+        // Stopped condition
+        if (0x0700 < horizontalVal && 0x08F0 > horizontalVal && !horizStopped){
+          L6470_HardStop(1); 
+          USART_Transmit(&huart2, " HORIZ STOPPED");
+          USART_Transmit(&huart2, " \n\r"); 
+          horizStopped = 1; 
         }
 
-        // Forward condition
-        else if ((0x05DC > myADCVal) && !HorizSpeedSet) {
-          L6470_Run(1,L6470_DIR_FWD_ID,5000);
-          HorizSpeedSet = 1;
-          HorizStopped = 0; 
+        // Reverse direction (LEFT)
+        else if(horizontalVal < 0x0700 && !horizSpeedSet ) {
+          horizSpeed = 15 * (0x0700 - horizontalVal); 
+          horizDir = L6470_DIR_REV_ID;
+          L6470_Run(1, horizDir, horizSpeed);
+          USART_Transmit(&huart2, " HORIZ REV DIR: ");
+          USART_Transmit(&huart2, num2hex(horizSpeed, WORD_F));
+          USART_Transmit(&huart2, " \n\r");
+          prevHorizSpeed = horizontalVal; 
+          horizStopped = 0; 
         }
-        else if (0x09C4 < myADCVal && !HorizSpeedSet) {
-          L6470_Run(1,L6470_DIR_REV_ID,5000);
-          HorizSpeedSet = 1; 
-          HorizStopped = 0;
+        
+        // Forward direction (Right)
+        else if(horizontalVal > 0x08F0 && !horizSpeedSet) {
+          horizSpeed = 15 * (horizontalVal - 0x08F0); 
+          horizDir = L6470_DIR_FWD_ID;
+          L6470_Run(1, horizDir, horizSpeed);
+          USART_Transmit(&huart2, " HORIZ FWD DIR: ");
+          USART_Transmit(&huart2, num2hex(horizSpeed, WORD_F));
+          USART_Transmit(&huart2, " \n\r");
+          prevHorizSpeed = horizontalVal; 
+          horizStopped = 0; 
         }
+        //////////////////////////////
+        //  VERTICAL MOTOR CONTROL  //
+        //////////////////////////////
+        
+        if(0x0700 < verticalVal && 0x08F0 > verticalVal && !verticalStopped){
+          L6470_HardStop(0);
+          USART_Transmit(&huart2, " VERTICAL STOPPED");
+          USART_Transmit(&huart2, " \n\r");
+          verticalStopped = 1; 
+        }
+
+        else if(verticalVal < 0x0700 && !verticalSpeedSet) {
+          verticalSpeed = 15 * (0x0700 - verticalVal);
+          verticalDir = L6470_DIR_REV_ID;
+          L6470_Run(0, verticalDir, verticalSpeed);
+          USART_Transmit(&huart2, " VERTICAL REV DIR: ");
+          USART_Transmit(&huart2, num2hex(verticalSpeed, WORD_F));
+          USART_Transmit(&huart2, " \n\r");
+          prevVerticalSpeed = verticalVal; 
+          verticalStopped = 0; 
+        }
+
+        else if(verticalVal > 0x08F0 && !verticalSpeedSet) {
+          verticalSpeed = 15 * (verticalVal - 0x08F0);
+          verticalDir = L6470_DIR_FWD_ID;
+          L6470_Run(0, verticalDir, verticalSpeed);
+          USART_Transmit(&huart2, " VERTICAL FWD DIR: ");
+          USART_Transmit(&huart2, num2hex(verticalSpeed, WORD_F));
+          USART_Transmit(&huart2, " \n\r");
+          prevVerticalSpeed = verticalVal; 
+          verticalStopped = 0; 
+        }
+
+
+      
+
     }
   #elif defined (SERIAL_USART_EXAMPLE)
     while(1) {
@@ -362,12 +436,18 @@ void assert_failed(uint8_t* file, uint32_t line)
   * @brief  This function return the ADC conversion result.
   * @retval The number into the range [0, 4095] as [0, 3.3]V.
   */
-uint16_t Read_ADC(void)
+uint16_t* Read_ADC(void)
 {
+
   HAL_ADC_Start(&HADC);
   HAL_ADC_PollForConversion(&HADC, 100);
-  
-  return HAL_ADC_GetValue(&HADC);
+  uint16_t value1=HAL_ADC_GetValue(&HADC);
+  HAL_ADC_PollForConversion(&HADC, 100);
+  uint16_t value2=HAL_ADC_GetValue(&HADC);
+  HAL_ADC_Stop(&HADC);
+  uint16_t values[2]={value1, value2};
+
+  return values;
 }
 
 /**
